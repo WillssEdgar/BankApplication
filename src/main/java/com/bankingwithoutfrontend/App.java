@@ -20,7 +20,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        String line = "-".repeat(20);
+        String line = "-".repeat(40);
         System.out.println(line);
         System.out.println("Welcome to WSE Banking!");
         Scanner scanner = new Scanner(System.in);
@@ -33,12 +33,16 @@ public class App {
             System.out.println("2. Create Account");
             System.out.println("0. Exit");
             System.out.print("Choose one of the above: ");
-            String action = scanner.next();
+            int action = scanner.nextInt();
 
-            if ("1".equals(action) || "2".equals(action)) {
+            if (1 == action || 2 == action) {
                 loggedInUser = Bank.create_or_login(scanner, action);
-                loggedIn = true;
-            } else if ("0".equals(action)) {
+                if (!loggedInUser.getFirstName().equals("Login Failed")) {
+                    loggedIn = true;
+                } else {
+                    System.out.println("Error. Please try again");
+                }
+            } else if (0 == action) {
                 System.out.println("Thank you for using WSE Banking. Goodbye!");
                 break;
             } else {
@@ -108,8 +112,6 @@ public class App {
                     default:
                         System.out.println("Invalid option. Please enter a valid number.");
                 }
-
-                // Handle user's choice here...
 
                 if ("0".equals(num)) {
                     System.out.println("Thank you for using WSE Banking. Goodbye!");

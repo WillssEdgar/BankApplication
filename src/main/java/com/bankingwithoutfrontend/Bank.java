@@ -10,39 +10,72 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Bank {
-    public static User create_or_login(Scanner scanner, String action) {
+    public static User create_or_login(Scanner scanner, int action) {
+        /*
+         * This method is called to initialize the User.
+         * case 1 to if the user wants to login
+         * case 2 is when the user wants to create an account
+         */
         switch (action) {
-            case "1":
+            case 1:
                 System.out.print("Enter your username: ");
                 String username = scanner.next();
+                if (!username.matches("^[a-zA-Z0-9_]+$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 System.out.print("Enter your password: ");
                 String password = scanner.next();
-
+                if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 User loggedInUser = Bank.login(username, password);
 
                 return loggedInUser;
 
-            case "2":
+            case 2:
                 System.out.print("Enter your First Name: ");
                 String firstName = scanner.next();
+                if (!firstName.matches("^[a-zA-Z]+$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 System.out.print("Enter your Last Name: ");
                 String lastName = scanner.next();
+                if (!lastName.matches("^[a-zA-Z]+$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 System.out.print("Enter your Email: ");
                 String email = scanner.next();
+                if (!email.matches("^[a-zA-Z0-9@]+$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 System.out.print("Enter your Username: ");
-                String userUsername = scanner.next();
+                username = scanner.next();
+                if (!username.matches("^[a-zA-Z]+$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
                 System.out.print("Enter your Password: ");
-                String userPassword = scanner.next();
+                password = scanner.next();
+                if (!password.matches("^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")) {
+                    System.out.println("Error Invalid Input");
+                    return new User("Login Failed");
+                }
 
-                User createdUser = Bank.create(firstName, lastName, email, userUsername, userPassword);
+                User createdUser = new User(firstName, lastName, false, email, username, password);
+                Bank.create(createdUser);
                 return createdUser;
             default:
                 return new User("Login Failed");
         }
     }
 
-    public static User create(String firstname, String lastname, String email, String username, String password) {
-        User user = new User(firstname, lastname, false, email, username, password);
+    public static User create(User user) {
+
         final String CREATE_USER = "INSERT INTO Users (firstname, lastname, isadmin, email, username, password) VALUES(?,?,?,?,?,?);";
         try (var conn = DB.connect();
                 Statement stmt = conn.createStatement();
